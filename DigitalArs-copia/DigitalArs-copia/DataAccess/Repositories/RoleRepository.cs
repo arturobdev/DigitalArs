@@ -14,36 +14,6 @@ namespace DigitalArs_copia.DataAccess.Repositories
             _mapper = mapper;
         }
 
-        public async Task<bool> UpdateRole(Role role, int id, int parameter)
-        {
-            try
-            {
-                var roleFinding = await GetById(id);
-                if (roleFinding == null)
-                {
-                    return false;
-                }
-                if (parameter == 0)
-                {
-                    _mapper.Map(role, roleFinding);
-                    _contextDB.Update(role);
-                    return true;
-
-                }
-                if (parameter == 1)
-                {
-                    _contextDB.Update(roleFinding);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }
-        }
-
         public virtual async Task<List<Role>> GetAllRoles(int parameter)
         {
             try
@@ -96,32 +66,6 @@ namespace DigitalArs_copia.DataAccess.Repositories
             }
         }
 
-        public async Task<bool> DeleteRoleById(int id, int parameter)
-        {
-
-            try
-            {
-                Role roleFinding = await GetById(id);
-                if (roleFinding == null)
-                {
-                    return false;
-                }
-      
-                if (roleFinding != null && parameter == 1)
-                {
-                    _contextDB.Roles.Remove(roleFinding);
-                    return true;
-                }
-
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-        }
-
         public virtual async Task<bool> InsertRole(RoleDTO roleDTO)
         {
             try
@@ -136,5 +80,65 @@ namespace DigitalArs_copia.DataAccess.Repositories
             }
 
         }
+
+        public async Task<bool> UpdateRole(RoleDTO roleDTO, int id, int parameter)
+        {
+            try
+            {
+                var role = _mapper.Map<Role>(roleDTO);
+                var roleFinding = await GetById(id);
+                if (roleFinding == null)
+                {
+                    return false;
                 }
+                if (parameter == 0)
+                {
+                    _mapper.Map(role, roleFinding);
+                    _contextDB.Update(role);
+                    Console.WriteLine($"Role ID: {roleFinding.Id}");
+                    Console.WriteLine($"Role Name: {roleFinding.Name}");
+                    Console.WriteLine($"Role Description: {roleFinding.Description}");
+                    return true;
+
+                }
+                if (parameter == 1)
+                {
+                    _contextDB.Update(roleFinding);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteRoleById(int id, int parameter)
+        {
+
+            try
+            {
+                Role roleFinding = await GetById(id);
+                if (roleFinding == null)
+                {
+                    return false;
+                }
+
+                if (roleFinding != null && parameter == 1)
+                {
+                    _contextDB.Roles.Remove(roleFinding);
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+    }
 }

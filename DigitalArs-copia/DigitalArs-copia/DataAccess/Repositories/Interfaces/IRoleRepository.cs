@@ -7,6 +7,6 @@ namespace DigitalArs_copia.DataAccess.Repositories.Interfaces
         public Task<List<Role>> GetAllRoles(int parameter);
         public Task<Role> GetRoleById(int id, int parameter);
         public Task<bool> DeleteRoleById(int id, int parameter);
-        public Task<bool> UpdateRole(Role role, int id, int paramater);
+        //public Task<bool> UpdateRole(RoleDTO roleDTO, int id, int paramater);
     }
 }
