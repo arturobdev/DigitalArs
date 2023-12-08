@@ -62,7 +62,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 {
                     List<Account> accounts = await _contextDB.Accounts
                         .Include(account => account.User)
-                        .Where(account => account.IsBlocked != true)
+                        .Where(account => account.IsBlocked == true)
                         .ToListAsync();
 
                     return _mapper.Map<List<AccountDTO>>(accounts);
