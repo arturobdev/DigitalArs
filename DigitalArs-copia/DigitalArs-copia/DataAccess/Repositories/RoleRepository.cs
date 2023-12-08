@@ -2,6 +2,7 @@
 using DigitalArs_copia.DataAccess.Repositories.Interfaces;
 using DigitalArs_copia.DTO_s;
 using DigitalArs_copia.Entities;
+using System.Data;
 
 namespace DigitalArs_copia.DataAccess.Repositories
 {
@@ -94,16 +95,13 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 if (parameter == 0)
                 {
                     _mapper.Map(role, roleFinding);
-                    _contextDB.Update(role);
-                    Console.WriteLine($"Role ID: {roleFinding.Id}");
-                    Console.WriteLine($"Role Name: {roleFinding.Name}");
-                    Console.WriteLine($"Role Description: {roleFinding.Description}");
+                    await _contextDB.SaveChangesAsync();
                     return true;
-
                 }
                 if (parameter == 1)
                 {
-                    _contextDB.Update(roleFinding);
+                    _mapper.Map(role, roleFinding);
+                    await _contextDB.SaveChangesAsync();
                     return true;
                 }
                 return false;
@@ -126,9 +124,10 @@ namespace DigitalArs_copia.DataAccess.Repositories
                     return false;
                 }
 
-                if (roleFinding != null && parameter == 1)
+                if (roleFinding != null)
                 {
                     _contextDB.Roles.Remove(roleFinding);
+                    await _contextDB.SaveChangesAsync();
                     return true;
                 }
 
