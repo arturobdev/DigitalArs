@@ -32,7 +32,7 @@ namespace DigitalArs_copia.Controllers
                 return ResponseFactory.CreateErrorResponse(500, "A surprise error happened, please try again.");
             }
         }
-
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id, int parameter = 0)
         {
             try
@@ -64,7 +64,7 @@ namespace DigitalArs_copia.Controllers
                 return ResponseFactory.CreateErrorResponse(500, "A suprise error happened.");
             }
         }
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAccount([FromRoute] int id, AccountDTO accountDTO, int parameter = 0)
         {
             try
