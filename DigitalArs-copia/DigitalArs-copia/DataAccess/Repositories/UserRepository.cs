@@ -161,6 +161,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
             }
 
         }
+
         public async Task<User?> AuthenticateCredentials(AuthenticateDTO dto)
         {
 

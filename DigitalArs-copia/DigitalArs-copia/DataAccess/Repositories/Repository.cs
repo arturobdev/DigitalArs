@@ -1,4 +1,5 @@
 ﻿using DigitalArs_copia.DataAccess.Repositories.Interfaces;
+using DigitalArs_copia.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalArs_copia.DataAccess.Repositories
@@ -11,6 +12,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
         public Repository(ContextDB contextDB)
         {
             _contextDB = contextDB;
+
         }
         public virtual async Task<List<T>> GetAll()
         {

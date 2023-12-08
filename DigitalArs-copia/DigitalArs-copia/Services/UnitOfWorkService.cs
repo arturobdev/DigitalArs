@@ -15,8 +15,6 @@ namespace DigitalArs_copia.Services
 
         public RoleRepository RoleRepository { get; set; }
 
-        AccountRepository IUnitOfWork.AccountRepository => throw new NotImplementedException();
-
         public UnitOfWorkService(ContextDB contextDB, IMapper mapper)
         {
             _contextDB = contextDB;

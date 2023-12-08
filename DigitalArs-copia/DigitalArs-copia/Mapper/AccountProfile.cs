@@ -12,8 +12,6 @@ namespace DigitalArs_copia.Mapper
 
             CreateMap<AccountDTO, Account>()
             .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => false));
-
-        
         }
     }
 }
