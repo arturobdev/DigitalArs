@@ -7,8 +7,8 @@ namespace DigitalArs_copia.Entities
     public class Role
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("role_id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id{ get; set; }
 
         [Required]

@@ -2,6 +2,7 @@
 using DigitalArs_copia.DataAccess.Repositories.Interfaces;
 using DigitalArs_copia.DTO_s;
 using DigitalArs_copia.Entities;
+using System.Data;
 
 namespace DigitalArs_copia.DataAccess.Repositories
 {
@@ -12,36 +13,6 @@ namespace DigitalArs_copia.DataAccess.Repositories
         public RoleRepository(ContextDB contextDB, IMapper mapper) : base(contextDB)
         {
             _mapper = mapper;
-        }
-
-        public async Task<bool> UpdateRole(Role role, int id, int parameter)
-        {
-            try
-            {
-                var roleFinding = await GetById(id);
-                if (roleFinding == null)
-                {
-                    return false;
-                }
-                if (parameter == 0)
-                {
-                    _mapper.Map(role, roleFinding);
-                    _contextDB.Update(role);
-                    return true;
-
-                }
-                if (parameter == 1)
-                {
-                    _contextDB.Update(roleFinding);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }
         }
 
         public virtual async Task<List<Role>> GetAllRoles(int parameter)
@@ -96,6 +67,52 @@ namespace DigitalArs_copia.DataAccess.Repositories
             }
         }
 
+        public virtual async Task<bool> InsertRole(RoleDTO roleDTO)
+        {
+            try
+            {
+                var role = _mapper.Map<Role>(roleDTO);
+                var response = await base.Insert(role);
+                return response;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+        public async Task<bool> UpdateRole(RoleDTO roleDTO, int id, int parameter)
+        {
+            try
+            {
+                var role = _mapper.Map<Role>(roleDTO);
+                var roleFinding = await GetById(id);
+                if (roleFinding == null)
+                {
+                    return false;
+                }
+                if (parameter == 0)
+                {
+                    _mapper.Map(role, roleFinding);
+                    await _contextDB.SaveChangesAsync();
+                    return true;
+                }
+                if (parameter == 1)
+                {
+                    _mapper.Map(role, roleFinding);
+                    await _contextDB.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
         public async Task<bool> DeleteRoleById(int id, int parameter)
         {
 
@@ -106,29 +123,15 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 {
                     return false;
                 }
-      
-                if (roleFinding != null && parameter == 1)
+
+                if (roleFinding != null)
                 {
                     _contextDB.Roles.Remove(roleFinding);
+                    await _contextDB.SaveChangesAsync();
                     return true;
                 }
 
                 return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-        }
-
-        public virtual async Task<bool> InsertRole(RoleDTO roleDTO)
-        {
-            try
-            {
-                var role = _mapper.Map<Role>(roleDTO);
-                var response = await base.Insert(role);
-                return response;
             }
             catch (Exception)
             {
