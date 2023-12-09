@@ -49,7 +49,7 @@ namespace DigitalArs_copia.Controllers
             return ResponseFactory.CreateErrorResponse(400, "Error");
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRole(int id, RoleDTO roleDTO, int parameter = 0)
         {
             var result = await _unitOfWork.RoleRepository.UpdateRole(roleDTO, id, parameter);
@@ -61,7 +61,7 @@ namespace DigitalArs_copia.Controllers
             return ResponseFactory.CreateErrorResponse(400, "Error");
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(int id, int parameter = 0)
         {
             await _unitOfWork.Complete();
