@@ -84,27 +84,28 @@ namespace DigitalArs_copia.DataAccess.Repositories
         }
 
 
-        public async Task<UserDTO> GetUserById(int id, int parameter)
+        public async Task<User> GetUserById(int id, int parameter)
         {
             try
             {
-                User user = await _contextDB.Users
-                            .Include(u => u.Role)
-                            .Where(u => u.Id == id)
-                            .FirstOrDefaultAsync();
+                //User user = await _contextDB.Users
+                //            .Include(u => u.Role)
+                //            .Where(u => u.Id == id)
+                //            .FirstOrDefaultAsync();
+                User userFinding = await base.GetById(id);
 
-                if (user == null)
+                if (userFinding == null)
                 {
                     return null;
                 }
 
                 if ( parameter == 0)
                 {
-                    return _mapper.Map<UserDTO>(user);
+                    return userFinding;
                 }
                 if (parameter == 1)
                 {
-                    return _mapper.Map<UserDTO>(user);
+                    return userFinding;
                 }
                 return null;
 
@@ -174,6 +175,11 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 return null;
             }
 
+        }
+
+        Task<UserDTO> IUserRepository.GetUserById(int id, int parameter)
+        {
+            throw new NotImplementedException();
         }
     }
 }

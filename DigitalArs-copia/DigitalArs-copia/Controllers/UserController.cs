@@ -33,5 +33,11 @@ namespace DigitalArs_copia.Controllers
             }
 
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id, int parameter = 0)
+        {
+            return ResponseFactory.CreateSuccessResponse(200, await _unitOfWork.UserRepository.GetById(id));
+        }
     }
 }
