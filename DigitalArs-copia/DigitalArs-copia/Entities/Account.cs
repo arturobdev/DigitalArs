@@ -13,7 +13,7 @@ namespace DigitalArs_copia.Entities
         public int Id { get; set; }
 
         [Column("creation_date")]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
 
         [Column("money", TypeName ="REAL")]
         public decimal Money { get; set; }

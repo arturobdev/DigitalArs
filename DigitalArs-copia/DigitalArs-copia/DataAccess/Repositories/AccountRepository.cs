@@ -62,7 +62,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 {
                     List<Account> accounts = await _contextDB.Accounts
                         .Include(account => account.User)
-                        .Where(account => account.IsBlocked == true)
+                        .Where(account => account.IsBlocked == false)
                         .ToListAsync();
 
                     return _mapper.Map<List<AccountDTO>>(accounts);
@@ -160,6 +160,62 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 return false;
             }
 
+        }
+
+        public async Task<bool> Transfer(int id, TransferDTO transferDTO)
+        {
+            try
+            {
+                var sendingAccount = await this.Extract(id, transferDTO.Money);
+                var receptorAccount = await this.Deposit(transferDTO.AccountReceptorId, transferDTO.Money);
+                if(!sendingAccount || !receptorAccount)
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> Deposit(int id, decimal money)
+        {
+            try
+            {
+                var receptorAccount = await base.GetById(id);
+                if(receptorAccount == null || receptorAccount.IsBlocked)
+                {
+                    return false;
+                }
+                receptorAccount.Money += money;
+                _contextDB.Update(receptorAccount);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> Extract(int id, decimal money)
+        {
+            try
+            {
+                var existingAccount = await base.GetById(id);
+                if (existingAccount == null || existingAccount.IsBlocked || existingAccount.Money < money)
+                {
+                    return false;
+                }
+                existingAccount.Money -= money;
+                _contextDB.Update(existingAccount);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }
