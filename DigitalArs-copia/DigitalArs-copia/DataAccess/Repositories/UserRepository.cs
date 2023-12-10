@@ -127,15 +127,10 @@ namespace DigitalArs_copia.DataAccess.Repositories
                     return false;
                 }
 
-                if (parameter == 0)
-                {
-                    _contextDB.Update(userFinding);
-
-                    return true;
-                }
-                if (parameter == 1)
+                if (userFinding != null)
                 {
                     _contextDB.Users.Remove(userFinding);
+                    await _contextDB.SaveChangesAsync();
                     return true;
                 }
 
