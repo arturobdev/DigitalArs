@@ -148,6 +148,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
             try
             {
                 var user = _mapper.Map<User>(userRegisterDTO);
+                user.Password = PasswordEncryptHelper.EncryptPassword(user.Password, user.Email);
                 var response = await base.Insert(user);
                 return response;
             }
