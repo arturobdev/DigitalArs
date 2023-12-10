@@ -24,18 +24,23 @@ namespace DigitalArs_copia.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> Login(UserLoginDTO usersloginDTO)
+        public async Task<IActionResult> Login(AuthenticateDTO authenticateDTO)
         {
             try
             {
-                var usersCredentials = await _unitOfWork.UserRepository.AuthenticateCredentials(usersloginDTO);
+                var usersCredentials = await _unitOfWork.UserRepository.AuthenticateCredentials(authenticateDTO);
+                if (usersCredentials is null)
+                {
+                    return ResponseFactory.CreateErrorResponse(401, "The credentials are incorrect");
+                }
+
                 var token = _tokenJwtHelper.GenerateToken(usersCredentials);
 
                 return ResponseFactory.CreateSuccessResponse(200, token);
             }
             catch (Exception ex)
             {
-                return ResponseFactory.CreateErrorResponse(500, "Contacte a sistemas");
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error hapenned");
             } 
         }
     }
