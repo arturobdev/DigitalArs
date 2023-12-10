@@ -173,6 +173,16 @@ namespace DigitalArs_copia.DataAccess.Repositories
 
         }
 
+        public async Task<User?> AuthenticateCredentials(UserLoginDTO userLoginDTO)
+        {
+            try
+            {
+                return await _contextDB.Users.FirstOrDefaultAsync(x => x.Email == userLoginDTO.Email && x.Password == userLoginDTO.Password);
+            }
+
+            catch { return null; }
+        }
+
         Task<UserDTO> IUserRepository.GetUserById(int id, int parameter)
         {
             throw new NotImplementedException();
