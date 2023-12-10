@@ -52,7 +52,7 @@ namespace DigitalArs_copia.Controllers
             try
             {
                 var response = await _unitOfWork.AccountRepository.InsertAccount(accountDTO);
-                if (response == true)
+                if (response)
                 {
                     await _unitOfWork.Complete();
                     return ResponseFactory.CreateSuccessResponse(200, "Account was added.");
@@ -70,7 +70,7 @@ namespace DigitalArs_copia.Controllers
             try
             {
                 var result = await _unitOfWork.AccountRepository.UpdateAccount(accountDTO, id, parameter);
-                if (result == true)
+                if (result)
                 {
                     await _unitOfWork.Complete();
                     return ResponseFactory.CreateSuccessResponse(200, "Account was successfuly edited.");
@@ -90,7 +90,7 @@ namespace DigitalArs_copia.Controllers
             try
             {
                 var result = await _unitOfWork.AccountRepository.DeleteAccountById(id, parameter);
-                if (result == true)
+                if (result)
                 {
                     await _unitOfWork.Complete();
                     return ResponseFactory.CreateSuccessResponse(200, "Succesful removal");
@@ -100,6 +100,63 @@ namespace DigitalArs_copia.Controllers
             catch (Exception ex)
             {
                 return ResponseFactory.CreateErrorResponse(500, "Error deleting account.");
+            }
+        }
+
+        [HttpPost("transfer/{id}")]
+        public async Task<IActionResult> Transfer(int id, TransferDTO transferDTO)
+        {
+            try
+            {
+                var result = await _unitOfWork.AccountRepository.Transfer(id, transferDTO);
+                if (result)
+                {
+                    await _unitOfWork.Complete();
+                    return ResponseFactory.CreateSuccessResponse(200, "Transfer was succesful");
+                }
+                return ResponseFactory.CreateErrorResponse(400, "Error transfering.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseFactory.CreateErrorResponse(500, "An unexpected error hapenned.");
+            }
+        }
+
+        [HttpPost("deposit/{id}")]
+        public async Task<IActionResult> Deposit(int id, decimal money)
+        {
+            try
+            {
+                var result = await _unitOfWork.AccountRepository.Deposit(id, money);
+                if (result)
+                {
+                    await _unitOfWork.Complete();
+                    return ResponseFactory.CreateSuccessResponse(200, "Deposit was succesful");
+                }
+                return ResponseFactory.CreateErrorResponse(400, "Error depositing.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseFactory.CreateErrorResponse(500, "An unexpected error hapenned.");
+            }
+        }
+
+        [HttpPost("extract/{id}")]
+        public async Task<IActionResult> Extract(int id, decimal money)
+        {
+            try
+            {
+                var result = await _unitOfWork.AccountRepository.Extract(id, money);
+                if (result)
+                {
+                    await _unitOfWork.Complete();
+                    return ResponseFactory.CreateSuccessResponse(200, "Extraction was succesful");
+                }
+                return ResponseFactory.CreateErrorResponse(400, "Error extracting.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseFactory.CreateErrorResponse(500, "An unexpected error hapenned.");
             }
         }
     }
