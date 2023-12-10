@@ -56,24 +56,24 @@ namespace DigitalArs_copia.DataAccess.Repositories
         }
 
 
-        public virtual async Task<List<UserDTO>> GetAllUsers(int parameter)
+        public virtual async Task<List<User>> GetAllUsers(int parameter)
         {
             try
             {
                 if (parameter == 0)
                 {
+                    List<User> users = await _contextDB.Users.ToListAsync();
+
+                    return users;
+                }
+                if(parameter == 1)
+                {
                     List<User> users = await _contextDB.Users
                         .Include(user => user.Role)
                         .ToListAsync();
 
-                    return _mapper.Map<List<UserDTO>>(users);
+                    return users;
                 }
-                else if (parameter == 1)
-                {
-                    List<User> users = await _contextDB.Users.Include(user => user.Role).ToListAsync();
-                    return _mapper.Map<List<UserDTO>>(users);
-                }
-
                 return null;
             }
             catch (Exception)
@@ -88,11 +88,10 @@ namespace DigitalArs_copia.DataAccess.Repositories
         {
             try
             {
-                //User user = await _contextDB.Users
-                //            .Include(u => u.Role)
-                //            .Where(u => u.Id == id)
-                //            .FirstOrDefaultAsync();
-                User userFinding = await base.GetById(id);
+                User userFinding = await _contextDB.Users
+                           .Include(u => u.Role)
+                           .Where(u => u.Id == id)
+                           .FirstOrDefaultAsync();
 
                 if (userFinding == null)
                 {
@@ -100,10 +99,6 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 }
 
                 if ( parameter == 0)
-                {
-                    return userFinding;
-                }
-                if (parameter == 1)
                 {
                     return userFinding;
                 }
@@ -171,21 +166,6 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 return null;
             }
 
-        }
-
-        public async Task<User?> AuthenticateCredentials(UserLoginDTO userLoginDTO)
-        {
-            try
-            {
-                return await _contextDB.Users.FirstOrDefaultAsync(x => x.Email == userLoginDTO.Email && x.Password == userLoginDTO.Password);
-            }
-
-            catch { return null; }
-        }
-
-        Task<UserDTO> IUserRepository.GetUserById(int id, int parameter)
-        {
-            throw new NotImplementedException();
         }
     }
 }
