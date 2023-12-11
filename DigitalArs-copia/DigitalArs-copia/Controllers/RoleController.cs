@@ -34,12 +34,21 @@ namespace DigitalArs_copia.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id, int parameter = 0)
         {
+            try 
+            {
             return ResponseFactory.CreateSuccessResponse(200, await _unitOfWork.RoleRepository.GetById(id));
+            }
+            catch (Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddRole(RoleDTO roleDTO)
         {
+            try
+            {
             var result = await _unitOfWork.RoleRepository.InsertRole(roleDTO);
             if(result)
             {
@@ -47,11 +56,18 @@ namespace DigitalArs_copia.Controllers
             return ResponseFactory.CreateSuccessResponse(200, "Success");
             }
             return ResponseFactory.CreateErrorResponse(400, "Error");
+            }
+            catch(Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRole(int id, RoleDTO roleDTO, int parameter = 0)
         {
+            try 
+            {
             var result = await _unitOfWork.RoleRepository.UpdateRole(roleDTO, id, parameter);
             if ((bool)result)
             {
@@ -59,13 +75,25 @@ namespace DigitalArs_copia.Controllers
             return ResponseFactory.CreateSuccessResponse(200, "Success");
             }
             return ResponseFactory.CreateErrorResponse(400, "Error");
+            }
+            catch(Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(int id, int parameter = 0)
         {
+            try
+            {
             await _unitOfWork.Complete();
             return ResponseFactory.CreateSuccessResponse(200, await _unitOfWork.RoleRepository.DeleteRoleById(id, parameter));
+            }
+            catch(Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
     }
 }
