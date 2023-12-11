@@ -38,12 +38,21 @@ namespace DigitalArs_copia.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id, int parameter = 0)
         {
+            try
+            {
             return ResponseFactory.CreateSuccessResponse(200, await _unitOfWork.UserRepository.GetById(id));
+            }
+            catch (Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> InsertUser(UserRegisterDTO userRegisterDTO)
         {
+            try
+            {
             var result = await _unitOfWork.UserRepository.InsertUser(userRegisterDTO);
             if(result)
             {
@@ -51,11 +60,18 @@ namespace DigitalArs_copia.Controllers
                 return ResponseFactory.CreateSuccessResponse(200, "Success");
             }
             return ResponseFactory.CreateErrorResponse(400, "Error");
+            }
+            catch(Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(UserRegisterDTO userRegisterDTO, int id, int parameter = 0)
         {
+            try
+            {
             var result = await _unitOfWork.UserRepository.UpdateUser(userRegisterDTO, id, parameter);
             if(result)
             {
@@ -63,13 +79,25 @@ namespace DigitalArs_copia.Controllers
                 return ResponseFactory.CreateSuccessResponse(200, "Success");
             }
             return ResponseFactory.CreateErrorResponse(400, "Error");
+            }
+            catch(Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserById(int id, int parameter = 0)
         {
+            try
+            {
             await _unitOfWork.Complete();
             return ResponseFactory.CreateSuccessResponse(200, await _unitOfWork.UserRepository.DeleteUserById(id, parameter));
+            }
+            catch(Exception ex) 
+            {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error.");
+            }
         }
     }
 }
