@@ -56,23 +56,27 @@ namespace DigitalArs_copia.DataAccess.Repositories
         }
 
 
-        public virtual async Task<List<User>> GetAllUsers(int parameter)
+        public virtual async Task<List<UserDTO>> GetAllUsers(int parameter)
         {
             try
             {
                 if (parameter == 0)
                 {
-                    List<User> users = await _contextDB.Users.ToListAsync();
+                    List<User> users = await _contextDB.Users
+                        .Include(user => user.Role)
+                        .Where(user => user.IsActive)
+                        .ToListAsync();
 
-                    return users;
+                    return _mapper.Map<List<UserDTO>>(users);
                 }
                 if(parameter == 1)
                 {
                     List<User> users = await _contextDB.Users
                         .Include(user => user.Role)
+                        .Where(user => user.IsActive == false)
                         .ToListAsync();
 
-                    return users;
+                    return _mapper.Map<List<UserDTO>>(users);
                 }
                 return null;
             }
@@ -84,7 +88,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
         }
 
 
-        public async Task<User> GetUserById(int id, int parameter)
+        public async Task<UserDTO> GetUserById(int id, int parameter)
         {
             try
             {
@@ -100,7 +104,8 @@ namespace DigitalArs_copia.DataAccess.Repositories
 
                 if ( parameter == 0)
                 {
-                    return userFinding;
+
+                    return _mapper.Map<UserDTO>(userFinding);
                 }
                 return null;
 
@@ -122,13 +127,18 @@ namespace DigitalArs_copia.DataAccess.Repositories
                     return false;
                 }
 
-                if (userFinding != null)
+                if (userFinding != null && parameter == 0)
+                {
+                    userFinding.IsActive = false;
+                    await _contextDB.SaveChangesAsync();
+                    return true;
+                }
+                if (userFinding != null && parameter == 1)
                 {
                     _contextDB.Users.Remove(userFinding);
                     await _contextDB.SaveChangesAsync();
                     return true;
                 }
-
                 return false;
             }
             catch (Exception)
@@ -142,6 +152,11 @@ namespace DigitalArs_copia.DataAccess.Repositories
         {
             try
             {
+                if(userRegisterDTO.RoleId.HasValue && userRegisterDTO.RoleId != 3)
+                {
+                    return false;
+                }
+
                 var user = _mapper.Map<User>(userRegisterDTO);
                 user.Password = PasswordEncryptHelper.EncryptPassword(user.Password, user.Email);
                 var response = await base.Insert(user);

@@ -8,8 +8,5 @@
 
         public string Email { get; set; }
 
-        public int RoleId { get; set; }
-
-        public RoleDTO? RoleDTO { get; set; }
     }
 }
