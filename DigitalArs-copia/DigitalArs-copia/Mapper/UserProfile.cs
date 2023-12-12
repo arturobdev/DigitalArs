@@ -9,15 +9,13 @@ namespace DigitalArs_copia.Mapper
         public UserProfile() {
 
          CreateMap<UserDTO, User>();
-   
-         CreateMap<User, UserDTO>()
-        .ForMember(dest => dest.RoleDTO, opt => opt.MapFrom(src => src.Role));
 
+         CreateMap<User, UserDTO>();
 
          CreateMap<UserRegisterDTO, User>();
 
-            CreateMap<User, User>()
-           .ForMember(dest => dest.Id, opt => opt.Ignore());
+         CreateMap<User, User>()
+        .ForMember(dest => dest.Id, opt => opt.Ignore());
          }
     }
 }

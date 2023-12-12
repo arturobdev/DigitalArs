@@ -28,10 +28,13 @@ namespace DigitalArs_copia.Entities
         [Column("user_password", TypeName = "VARCHAR(100)")]
         public string Password { get; set; }
 
+        [Column("is_active")]
+        public bool IsActive { get; set; } = true;
+
         [Required]
         [Column("role_id")]
         [ForeignKey("RoleId")]
-        public int RoleId { get; set; }
+        public int RoleId { get; set; } = 3;
 
         public Role? Role { get; set; }
     }

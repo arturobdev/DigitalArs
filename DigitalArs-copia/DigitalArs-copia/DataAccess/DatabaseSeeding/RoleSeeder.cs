@@ -21,6 +21,12 @@ namespace DigitalArs_copia.DataAccess.DatabaseSeeding
                      Id = 2,
                      Name = "Consultant",
                      Description = "Consultant",
+                 },
+                 new Role
+                 { 
+                     Id = 3,
+                     Name = "User",
+                     Description = "Standard user"
                  });
         }
     }
