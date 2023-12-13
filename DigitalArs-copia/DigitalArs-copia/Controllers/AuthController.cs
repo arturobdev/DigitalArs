@@ -4,7 +4,7 @@ using DigitalArs_copia.DTO_s;
 using DigitalArs_copia.Services;
 using DigitalArs_copia.Helper;
 using DigitalArs_copia.Infraestructure;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace DigitalArs_copia.Controllers
 {
@@ -41,7 +41,23 @@ namespace DigitalArs_copia.Controllers
             catch (Exception ex)
             {
                 return ResponseFactory.CreateErrorResponse(500, "Unexpected error hapenned");
-            } 
+            }
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            try
+            {
+                var userId = User.FindFirst("userId")?.Value;
+                var user = await _unitOfWork.UserRepository.GetUserById(int.Parse(userId), 0);
+                return ResponseFactory.CreateSuccessResponse(200, user);
+            }
+            catch {
+                return ResponseFactory.CreateErrorResponse(500, "Unexpected error hapenned");
+            
+            }
         }
     }
 }
