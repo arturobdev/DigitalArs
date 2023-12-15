@@ -8,5 +8,6 @@
 
         public string Email { get; set; }
 
+        public RoleDTO Role { get; set; }
     }
 }
