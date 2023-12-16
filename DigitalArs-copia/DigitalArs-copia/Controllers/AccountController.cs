@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalArs_copia.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
-    [AllowAnonymous]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -25,20 +23,48 @@ namespace DigitalArs_copia.Controllers
             try
             {
                 var accounts = await _unitOfWork.AccountRepository.GetAllAccounts(parameter);
-                return ResponseFactory.CreateSuccessResponse(200, accounts);
+                if (accounts != null)
+                {
+                    return ResponseFactory.CreateSuccessResponse(200, accounts);
+                }
+                 return ResponseFactory.CreateErrorResponse(400, "There are not accounts.");
             }
             catch (Exception ex)
             {
                 return ResponseFactory.CreateErrorResponse(500, "A surprise error happened, please try again.");
             }
         }
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id, int parameter = 0)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             try
             {
+
                 var account = await _unitOfWork.AccountRepository.GetById(id);
-                return ResponseFactory.CreateSuccessResponse(200, account);
+                if (account != null)
+                {
+                    return ResponseFactory.CreateSuccessResponse(200, account);
+                }
+                return ResponseFactory.CreateErrorResponse(400, $"There is not account with id {id}.");
+            }
+            catch (Exception ex)
+            {
+                return ResponseFactory.CreateErrorResponse(500, "A surprise error happened, please try again.");
+            }
+        }
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> GetByUserId([FromRoute] int id)
+        {
+            try
+            {
+                var account = await _unitOfWork.AccountRepository.GetAccountByUserId(id);
+                if (account != null)
+                {
+                    return ResponseFactory.CreateSuccessResponse(200, account);
+                }
+                return ResponseFactory.CreateErrorResponse(400, $"There is no user with id {id}.");
             }
             catch (Exception ex)
             {
@@ -47,7 +73,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAcount(AccountDTO accountDTO)
+        public async Task<IActionResult> AddAcount(CreateAccountDTO accountDTO)
         {
             try
             {
@@ -65,7 +91,7 @@ namespace DigitalArs_copia.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccount([FromRoute] int id, AccountDTO accountDTO, int parameter = 0)
+        public async Task<IActionResult> UpdateAccount([FromRoute] int id, CreateAccountDTO accountDTO, int parameter = 0)
         {
             try
             {
