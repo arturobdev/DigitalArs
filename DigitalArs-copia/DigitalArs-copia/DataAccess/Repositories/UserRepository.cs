@@ -56,7 +56,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
         }
 
 
-        public virtual async Task<List<UserDTO>> GetAllUsers(int parameter)
+        public virtual async Task<List<User>> GetAllUsers(int parameter)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
                         .Where(user => user.IsActive)
                         .ToListAsync();
 
-                    return _mapper.Map<List<UserDTO>>(users);
+                    return _mapper.Map<List<User>>(users);
                 }
                 if(parameter == 1)
                 {
@@ -76,7 +76,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
                         .Where(user => user.IsActive == false)
                         .ToListAsync();
 
-                    return _mapper.Map<List<UserDTO>>(users);
+                    return _mapper.Map<List<User>>(users);
                 }
                 return null;
             }
