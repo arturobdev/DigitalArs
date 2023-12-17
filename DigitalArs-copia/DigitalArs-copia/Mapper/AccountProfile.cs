@@ -10,10 +10,8 @@ namespace DigitalArs_copia.Mapper
         {
             CreateMap<Account, AccountDTO>();
 
-            CreateMap<AccountDTO, Account>()
+            CreateMap<CreateAccountDTO, Account>()
             .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => false));
-
-        
         }
     }
 }

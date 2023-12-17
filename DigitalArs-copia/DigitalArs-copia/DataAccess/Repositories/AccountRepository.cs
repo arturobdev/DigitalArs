@@ -16,7 +16,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
 
         }
 
-        public async Task<bool> UpdateAccount(AccountDTO accountDTO, int id, int parameter)
+        public async Task<bool> UpdateAccount(CreateAccountDTO accountDTO, int id, int parameter)
         {
             try
             {
@@ -69,7 +69,10 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 }
                 else if (parameter == 1)
                 {
-                    List<Account> accounts = await _contextDB.Accounts.Include(account => account.User).ToListAsync();
+                    List<Account> accounts = await _contextDB.Accounts.
+                        Include(account => account.User)
+                       .Where(account => account.IsBlocked == true)
+                        .ToListAsync();
                     return _mapper.Map<List<AccountDTO>>(accounts);
                 }
 
@@ -83,12 +86,12 @@ namespace DigitalArs_copia.DataAccess.Repositories
         }
 
 
-        public async Task<AccountDTO> GetAccountById(int id, int parameter)
+        public async Task<AccountDTO> GetAccountById(int id)
         {
             try
             {
                 Account account = await _contextDB.Accounts
-                            .Include(account => account.User)
+                             .Include(account => account.User)
                             .Where(u => u.Id == id)
                             .FirstOrDefaultAsync();
 
@@ -96,16 +99,28 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 {
                     return null;
                 }
+                return _mapper.Map<AccountDTO>(account);
 
-                if (account.IsBlocked != true && parameter == 0)
-                {
-                    return _mapper.Map<AccountDTO>(account);
-                }
-                if (parameter == 1)
-                {
-                    return _mapper.Map<AccountDTO>(account);
-                }
+            }
+            catch (Exception)
+            {
                 return null;
+            }
+        }
+
+        public async Task<AccountDTO> GetAccountByUserId(int id)
+        {
+            try
+            {
+                Account account = await _contextDB.Accounts
+                            .Where(u => u.UserId == id)
+                            .FirstOrDefaultAsync();
+
+                if (account == null)
+                {
+                    return null;
+                }
+             return _mapper.Map<AccountDTO>(account);
 
             }
             catch (Exception)
@@ -147,7 +162,7 @@ namespace DigitalArs_copia.DataAccess.Repositories
 
         }
 
-        public virtual async Task<bool> InsertAccount(AccountDTO accountDTO)
+        public virtual async Task<bool> InsertAccount(CreateAccountDTO accountDTO)
         {
             try
             {
