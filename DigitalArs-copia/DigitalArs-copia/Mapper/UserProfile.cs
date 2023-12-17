@@ -15,7 +15,7 @@ namespace DigitalArs_copia.Mapper
          CreateMap<UserRegisterDTO, User>();
 
          CreateMap<User, User>()
-        .ForMember(dest => dest.Id, opt => opt.Ignore());
+        .ForMember(dest => dest.Password, opt => opt.Ignore());
          }
     }
 }
