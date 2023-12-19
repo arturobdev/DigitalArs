@@ -16,10 +16,11 @@ namespace DigitalArs_copia.DataAccess.Repositories
 
         }
 
-        public async Task<bool> UpdateAccount(CreateAccountDTO accountDTO, int id, int parameter)
+        public async Task<bool> UpdateAccount(CreateAccountDTO accountDTO, int id)
         {
             try
             {
+  
 
                 var accountFinding = await GetById(id);
 
@@ -27,24 +28,23 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 {
                     return false;
                 }
-                if (parameter == 0)
+                if(accountDTO.UserId)
                 {
-
-                    var account = _mapper.Map<Account>(accountDTO);
-                    _mapper.Map(account, accountFinding);
-                    _contextDB.Update(accountFinding);
-                    return true;
-
+                    accountFinding.UserId = (int)accountDTO.UserId;
                 }
-                if (accountFinding.IsBlocked == false && parameter == 1)
+                if(accountDTO.IsBlocked)
                 {
-                    accountFinding.IsBlocked = true;
-                    _contextDB.Update(accountFinding);
-                    return true;
-
+                    accountFinding.IsBlocked = (bool)accountDTO.IsBlocked;
                 }
+              
+                if(accountDTO.Money)
+                {
+                  accountFinding.Money = (decimal)accountDTO.Money;
+                }
+                
+                 _contextDB.Update(accountFinding);
+                 return true;
 
-                return false;
             }
             catch (Exception)
             {

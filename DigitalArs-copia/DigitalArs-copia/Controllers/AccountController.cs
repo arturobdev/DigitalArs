@@ -91,11 +91,12 @@ namespace DigitalArs_copia.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccount([FromRoute] int id, CreateAccountDTO accountDTO, int parameter = 0)
+        public async Task<IActionResult> UpdateAccount([FromRoute] int id, CreateAccountDTO accountDTO)
         {
             try
             {
-                var result = await _unitOfWork.AccountRepository.UpdateAccount(accountDTO, id, parameter);
+                Console.WriteLine(accountDTO);
+                var result = await _unitOfWork.AccountRepository.UpdateAccount(accountDTO, id);
                 if (result)
                 {
                     await _unitOfWork.Complete();

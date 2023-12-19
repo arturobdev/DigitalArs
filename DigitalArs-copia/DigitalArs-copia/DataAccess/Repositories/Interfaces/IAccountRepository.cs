@@ -8,7 +8,7 @@ namespace DigitalArs_copia.DataAccess.Repositories.Interfaces
         public Task<List<AccountDTO>> GetAllAccounts(int parameter);
         public Task<AccountDTO> GetAccountById(int id);
         public Task<bool> DeleteAccountById(int id, int parameter);
-        public Task<bool> UpdateAccount(CreateAccountDTO accountDTO, int id, int paramater);
+        public Task<bool> UpdateAccount(CreateAccountDTO accountDTO, int id);
         public Task<bool> InsertAccount(CreateAccountDTO accountDTO);
     }
 }
