@@ -28,19 +28,13 @@ namespace DigitalArs_copia.DataAccess.Repositories
                 {
                     return false;
                 }
-                if(accountDTO.UserId)
-                {
-                    accountFinding.UserId = (int)accountDTO.UserId;
-                }
-                if(accountDTO.IsBlocked)
-                {
-                    accountFinding.IsBlocked = (bool)accountDTO.IsBlocked;
-                }
-              
-                if(accountDTO.Money)
-                {
-                  accountFinding.Money = (decimal)accountDTO.Money;
-                }
+                
+                accountFinding.UserId = (int)accountDTO.UserId;
+                
+                accountFinding.IsBlocked = (bool)accountDTO.IsBlocked;
+               
+               accountFinding.Money = (decimal)accountDTO.Money;
+                
                 
                  _contextDB.Update(accountFinding);
                  return true;
