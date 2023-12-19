@@ -8,7 +8,6 @@ namespace DigitalArs_copia.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class UserController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -19,6 +18,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> GetAll(int parameter = 0)
         {
 
@@ -36,6 +36,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdministratorAndUser")]
         public async Task<IActionResult> GetById(int id, int parameter = 0)
         {
             try
@@ -49,6 +50,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> InsertUser(UserRegisterDTO userRegisterDTO)
         {
             try
@@ -68,7 +70,8 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(UserRegisterDTO userRegisterDTO, int id, int parameter = 0)
+        [Authorize(Policy = "AdministratorAndUser")]
+        public async Task<IActionResult> UpdateUser([FromBody]UserRegisterDTO userRegisterDTO, [FromRoute] int id, int parameter = 0)
         {
             try
             {
@@ -87,7 +90,8 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserById(int id, int parameter = 0)
+        [Authorize(Policy = "AdministratorAndUser")]
+        public async Task<IActionResult> DeleteUserById([FromRoute]int id, int parameter = 0)
         {
             try
             {

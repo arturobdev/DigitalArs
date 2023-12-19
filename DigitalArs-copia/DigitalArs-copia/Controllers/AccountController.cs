@@ -18,6 +18,7 @@ namespace DigitalArs_copia.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> GetAll(int parameter = 0)
         {
             try
@@ -36,6 +37,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy ="AdministratorAndUser")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             try
@@ -55,6 +57,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpGet("details/{id}")]
+        [Authorize(Policy = "AdministratorAndUser")]
         public async Task<IActionResult> GetByUserId([FromRoute] int id)
         {
             try
@@ -73,6 +76,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "User")]
         public async Task<IActionResult> AddAcount(CreateAccountDTO accountDTO)
         {
             try
@@ -90,12 +94,16 @@ namespace DigitalArs_copia.Controllers
                 return ResponseFactory.CreateErrorResponse(500, "A suprise error happened.");
             }
         }
+
+      
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccount([FromRoute] int id, CreateAccountDTO accountDTO, int parameter = 0)
+        [Authorize(Policy = "Administrator")]
+        public async Task<IActionResult> UpdateAccount([FromRoute] int id, CreateAccountDTO accountDTO)
         {
             try
             {
-                var result = await _unitOfWork.AccountRepository.UpdateAccount(accountDTO, id, parameter);
+                Console.WriteLine(accountDTO);
+                var result = await _unitOfWork.AccountRepository.UpdateAccount(accountDTO, id);
                 if (result)
                 {
                     await _unitOfWork.Complete();
@@ -111,6 +119,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> DeleteAccount([FromRoute] int id, int parameter = 0)
         {
             try
@@ -130,7 +139,8 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpPost("transfer/{id}")]
-        public async Task<IActionResult> Transfer(int id, TransferDTO transferDTO)
+        [Authorize(Policy = "User")]
+        public async Task<IActionResult> Transfer([FromRoute]int id, [FromBody]TransferDTO transferDTO)
         {
             try
             {
@@ -148,6 +158,7 @@ namespace DigitalArs_copia.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("deposit/{id}")]
         public async Task<IActionResult> Deposit(int id, decimal money)
         {
@@ -168,6 +179,7 @@ namespace DigitalArs_copia.Controllers
         }
 
         [HttpPost("extract/{id}")]
+        [Authorize(Policy = "User")]
         public async Task<IActionResult> Extract(int id, decimal money)
         {
             try

@@ -21,6 +21,7 @@ namespace DigitalArs_copia.Helper
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                 new("userEmail", user.Email),
                 new ("roleId", user.RoleId.ToString()),
                 new("userId", user.Id.ToString())
