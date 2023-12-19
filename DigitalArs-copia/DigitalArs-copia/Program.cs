@@ -25,12 +25,11 @@ builder.Services.AddAuthorization(option =>
 {
     option.AddPolicy("Administrator", policy => policy.RequireClaim(ClaimTypes.Role, "1"));
 
-    option.AddPolicy("Consultant", policy => policy.RequireClaim(ClaimTypes.Role, "2"));
+    option.AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role,"3"));
 
-
-    option.AddPolicy("AdministratorAndConsultant", policy =>
+    option.AddPolicy("AdministratorAndUser", policy =>
     {
-        policy.RequireClaim(ClaimTypes.Role, "1", "2");
+        policy.RequireClaim(ClaimTypes.Role, "1", "3");
     });
 
 });
